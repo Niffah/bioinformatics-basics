@@ -1,1 +1,64 @@
+def translate_rna_to_protein(rna_sequence):
+    """
+    Translates an RNA sequence string into a chain of amino acids
+    using a standard genetic code codon dictionary.
+    """
+    # Standard genetic code dictionary
+    codon_table = {
+        'AUA':'I', 'AUC':'I', 'AUU':'I', 'AUG':'M', # Start / Methionine
+        'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACU':'T',
+        'AAC':'N', 'AAU':'N', 'AAA':'K', 'AAG':'K',
+        'AGC':'S', 'AGU':'S', 'AGA':'R', 'AGG':'R',
+        'CUA':'L', 'CUC':'L', 'CUG':'L', 'CUU':'L',
+        'CCA':'P', 'CCC':'P', 'CCG':'P', 'CCU':'P',
+        'CAC':'H', 'CAU':'H', 'CAA':'Q', 'CAG':'Q',
+        'CGA':'R', 'CGC':'R', 'CGG':'R', 'CGU':'R',
+        'GUA':'V', 'GUC':'V', 'GUG':'V', 'GUU':'V',
+        'GCA':'A', 'GCC':'A', 'GCG':'A', 'GCU':'A',
+        'GAC':'D', 'GAU':'D', 'GAA':'E', 'GAG':'E',
+        'GGA':'G', 'GGC':'G', 'GGG':'G', 'GGU':'G',
+        'UCA':'S', 'UCC':'S', 'UCG':'S', 'UCU':'S',
+        'UUC':'F', 'UUU':'F', 'UUA':'L', 'UUG':'L',
+        'UAC':'Y', 'UAU':'Y', 'UAA':'_Stop_', 'UAG':'_Stop_', 'UGA':'_Stop_'
+    }
+    
+    protein = []
+    # Loop through the string 3 bases (one codon) at a time
+    for i in range(0, len(rna_sequence) - 2, 3):
+        codon = rna_sequence[i:i+3].upper()
+        if codon in codon_table:
+            amino_acid = codon_table[codon]
+            if amino_acid == '_Stop_':
+                break
+            protein.append(amino_acid)
+            
+    return "".join(protein)
+
+def simulate_point_mutation(rna_sequence, position, new_base):
+    """
+    Simulates a point mutation at a specific position in the RNA sequence
+    to model transcription errors often studied in cellular aging.
+    """
+    sequence_list = list(rna_sequence.upper())
+    if 0 <= position < len(sequence_list):
+        old_base = sequence_list[position]
+        sequence_list[position] = new_base.upper()
+        mutated_sequence = "".join(sequence_list)
+        print(f"\n[Mutation Event Induced at position {position}]: {old_base} -> {new_base.upper()}")
+        return mutated_sequence
+    return rna_sequence
+
+# --- Mock Analysis Run ---
+# Sample RNA sequence containing a clear Start Codon (AUG)
+original_rna = "AUGGCAACGGCUAAAUUUGCCUGA"
+
+print(f"Original Messenger RNA (mRNA): {original_rna}")
+original_protein = translate_rna_to_protein(original_rna)
+print(f"Translated Functional Protein: {original_protein}")
+
+# Simulate a mutation at position 6 (changing A to U) to see if the protein structural chain breaks
+mutated_rna = simulate_point_mutation(original_rna, 6, "U")
+mutated_protein = translate_rna_to_protein(mutated_rna)
+print(f"Mutated mRNA Sequence:        {mutated_rna}")
+print(f"Resulting Mutated Protein:    {mutated_protein}")
 
